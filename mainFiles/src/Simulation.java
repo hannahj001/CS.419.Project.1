@@ -50,6 +50,8 @@ public class Simulation {
 				lastClockInterruptTime = time;
 			}
 
+
+			//System.out.println("Time: " + time);
 			// Increments unit of time
 			time++;
 
