@@ -51,7 +51,7 @@ public class RR implements Scheduler {
 		System.out.println(p.getId() + " finished at time " + time + ". Its waiting time is " + waitingTime);
 		System.out.println("Current average waiting time: " + calculateAvgWaiting());
 
-		processFinishedDuringInterrupt = true; // Mark that a process finished during this interrupt
+		processFinishedDuringInterrupt = true;
 
 	}
 
