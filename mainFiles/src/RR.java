@@ -3,7 +3,6 @@ package mainFiles.src;
 import java.util.ArrayList;
 import java.util.List;
 
-//TODO: if the interrupt is at the same time as a process finishes it causes wierd things to happen
 /**
  * Round-Robin
  */
@@ -50,8 +49,11 @@ public class RR implements Scheduler {
 
 		System.out.println(p.getId() + " finished at time " + time + ". Its waiting time is " + waitingTime);
 		System.out.println("Current average waiting time: " + calculateAvgWaiting());
+		System.out.println("Start running Process {" + "Id=" + queue.getFirst().getId() + ", Arrival Time=" + queue.getFirst().getTimeOfArrival() + ", Burst Time=" + queue.getFirst().getBurstTime() + ", Current Time=" + time + "}");
 
 		processFinishedDuringInterrupt = true;
+
+
 
 	}
 
@@ -62,10 +64,10 @@ public class RR implements Scheduler {
 		//	System.out.println(queue.get(i).getId());
 		//}
 
-		if (processFinishedDuringInterrupt) {
-			processFinishedDuringInterrupt = false;
-			return;
-		}
+		//if (processFinishedDuringInterrupt) {
+		//	processFinishedDuringInterrupt = false;
+		//	return;
+		//}
 
 		SimProcess firstElement = queue.getFirst();
 		queue.removeFirst();
