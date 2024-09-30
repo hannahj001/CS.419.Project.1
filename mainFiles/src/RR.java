@@ -13,6 +13,8 @@ public class RR implements Scheduler {
 	private List<Integer> waitingTimes;
 	private int timeQuantum = 0;
 	private int totalWaitingTime = 0;
+	private boolean processFinishedDuringInterrupt = false;
+
 
 	public RR(int i) {
 		System.out.println(i);
@@ -48,6 +50,9 @@ public class RR implements Scheduler {
 
 		System.out.println(p.getId() + " finished at time " + time + ". Its waiting time is " + waitingTime);
 		System.out.println("Current average waiting time: " + calculateAvgWaiting());
+
+		processFinishedDuringInterrupt = true; // Mark that a process finished during this interrupt
+
 	}
 
 	@Override
@@ -56,6 +61,11 @@ public class RR implements Scheduler {
 		//for (int i = 0; i < queue.size(); i++) {
 		//	System.out.println(queue.get(i).getId());
 		//}
+
+		if (processFinishedDuringInterrupt) {
+			processFinishedDuringInterrupt = false;
+			return;
+		}
 
 		SimProcess firstElement = queue.getFirst();
 		queue.removeFirst();
