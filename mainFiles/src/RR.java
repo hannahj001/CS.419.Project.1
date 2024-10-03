@@ -1,5 +1,6 @@
 package mainFiles.src;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,8 @@ public class RR implements Scheduler {
 	private int timeQuantum = 0;
 	private int totalWaitingTime = 0;
 	private int interuptExitTime = 0;
+	private int lastExit = 0;
+	private SimProcess firstElement = null;
 
 
 	public RR(int i) {
@@ -37,7 +40,6 @@ public class RR implements Scheduler {
 		if (queue.size() == 1){
 			System.out.println("Start running Process {" + "Id=" + queue.getFirst().getId() + ", Arrival Time=" + queue.getFirst().getTimeOfArrival() + ", Burst Time=" + queue.getFirst().getBurstTime() + ", Current Time=" + time + "}");
 		}
-		//test();
 
 	}
 
@@ -52,27 +54,26 @@ public class RR implements Scheduler {
 		System.out.println("Current average waiting time: " + calculateAvgWaiting());
 
 
-		if ((interuptExitTime % 5 == 0)){
+		if (!(time % timeQuantum == 0)){
 			System.out.println("Start running Process {" + "Id=" + queue.getFirst().getId() + ", Arrival Time=" + queue.getFirst().getTimeOfArrival() + ", Burst Time=" + queue.getFirst().getBurstTime() + ", Current Time=" + time + "}");
 		}
 
-		//test();
+		lastExit = time;
 
 	}
 
 	@Override
 	public void onClockInterrupt(int timeElapsed, int time) {
 
-		//test();
-
-		//check if process needs to exit first
-
-		SimProcess firstElement = queue.getFirst();
-		queue.removeFirst();
-		queue.add(firstElement);
-		System.out.println("Stop running Process {" + "Id=" + firstElement.getId() + ", Current Time=" + time + "}");
-		System.out.println("Start running Process {" + "Id=" + queue.getFirst().getId() + ", Arrival Time=" + queue.getFirst().getTimeOfArrival() + ", Burst Time=" + queue.getFirst().getBurstTime() + ", Current Time=" + time + "}");
-
+		if (!(queue.isEmpty())){
+			firstElement = queue.getFirst();
+			queue.removeFirst();
+			queue.add(firstElement);
+			if (!(lastExit == time)) {
+				System.out.println("Stop running Process {" + "Id=" + firstElement.getId() + ", Current Time=" + time + "}");
+			}
+			System.out.println("Start running Process {" + "Id=" + queue.getFirst().getId() + ", Arrival Time=" + queue.getFirst().getTimeOfArrival() + ", Burst Time=" + queue.getFirst().getBurstTime() + ", Current Time=" + time + "}");
+		}
 		interuptExitTime = time;
 
 	}
