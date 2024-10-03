@@ -5,7 +5,7 @@ import java.io.IOException;
 public class Main {
 
 	public static void main(String[] args) throws IOException {
-		String file = "mainFiles/schedule1.txt";
+		String file = "mainFiles/schedule3.txt";
 
 
 		Scheduler s;
