@@ -13,7 +13,7 @@ public class SJF implements Scheduler {
 	private SimProcess currentProcess;
 	private List<Integer> waitingTimes;
 	private int totalWaitingTime = 0;
-
+ 	private int multiArrival = -1;
 
 
 	public SJF() {
@@ -23,19 +23,24 @@ public class SJF implements Scheduler {
 	}
 	@Override
 	public void onProcessArrival(SimProcess p, int time) {
-		//System.out.println("Arrival Process {" + "Id=" + p.getId() + ", Arrival Time=" + p.getTimeOfArrival() + ", Burst Time=" + p.getBurstTime() + ", Current Time=" + time + "}");
-		queue.add(p);
-
-		queue.sort(Comparator.comparingInt(SimProcess::getTimeOfArrival));
-		if (currentProcess == null || (p.getTimeOfArrival() == currentProcess.getTimeOfArrival() && p.getBurstTime() <currentProcess.getBurstTime())) {
-			currentProcess = p;
-
-
-			//System.out.printf("\nis current process finished: %s \n",currentProcess().isFinished());
-		    //System.out.printf("\nis current process: %s \n",currentProcess().getId());
-			System.out.println("Start running Process {Id=" + currentProcess.getId() + ", Arrival Time=" + currentProcess.getTimeOfArrival() + ", Burst Time=" + currentProcess.getBurstTime() + ", Current Time=" + time + "}");
-
+		if (queue.isEmpty()){
+			queue.add(p);
 		}
+
+		if (queue.getFirst().getTimeOfArrival() == p.getTimeOfArrival()){
+			if (queue.getFirst().getBurstTime() > p.getBurstTime()){
+				queue.addFirst(p);
+			}
+		} else {
+			queue.add(p);
+		}
+
+		//System.out.println("Start running Process {Id=" + queue.getFirst().getId() + ", Arrival Time=" + queue.getFirst().getTimeOfArrival() + ", Burst Time=" + queue.getFirst().getBurstTime() + ", Current Time=" + time + "}");
+
+
+		//test();
+
+
 		}
 
 	@Override
@@ -85,5 +90,13 @@ public class SJF implements Scheduler {
 	@Override
 	public boolean isEmpty() {
 		return queue.isEmpty();
+	}
+
+	private void test(){
+		System.out.println("----------------------");
+		for (int i = 0; i < queue.size(); i++) {
+			System.out.println(queue.get(i).getId());
+		}
+		System.out.println("----------------------");
 	}
 }
