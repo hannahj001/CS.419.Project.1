@@ -3,6 +3,9 @@ package mainFiles.src;
 import java.util.ArrayList;
 import java.util.List;
 
+
+// if exist on a time it expects to interupt dont print, if
+
 /**
  * Round-Robin
  */
@@ -12,7 +15,7 @@ public class RR implements Scheduler {
 	private List<Integer> waitingTimes;
 	private int timeQuantum = 0;
 	private int totalWaitingTime = 0;
-	private boolean processFinishedDuringInterrupt = false;
+	private int interuptExitTime = 0;
 
 
 	public RR(int i) {
@@ -34,10 +37,8 @@ public class RR implements Scheduler {
 		if (queue.size() == 1){
 			System.out.println("Start running Process {" + "Id=" + queue.getFirst().getId() + ", Arrival Time=" + queue.getFirst().getTimeOfArrival() + ", Burst Time=" + queue.getFirst().getBurstTime() + ", Current Time=" + time + "}");
 		}
+		//test();
 
-		//System.out.println("Queue size: " + queue.size());
-		//System.out.println("New Process ID: " + p.getId());
-		//System.out.println("Arrival Time: " + p.getTimeOfArrival());
 	}
 
 	@Override
@@ -49,25 +50,22 @@ public class RR implements Scheduler {
 
 		System.out.println(p.getId() + " finished at time " + time + ". Its waiting time is " + waitingTime);
 		System.out.println("Current average waiting time: " + calculateAvgWaiting());
-		System.out.println("Start running Process {" + "Id=" + queue.getFirst().getId() + ", Arrival Time=" + queue.getFirst().getTimeOfArrival() + ", Burst Time=" + queue.getFirst().getBurstTime() + ", Current Time=" + time + "}");
-
-		processFinishedDuringInterrupt = true;
 
 
+		if ((interuptExitTime % 5 == 0)){
+			System.out.println("Start running Process {" + "Id=" + queue.getFirst().getId() + ", Arrival Time=" + queue.getFirst().getTimeOfArrival() + ", Burst Time=" + queue.getFirst().getBurstTime() + ", Current Time=" + time + "}");
+		}
+
+		//test();
 
 	}
 
 	@Override
 	public void onClockInterrupt(int timeElapsed, int time) {
 
-		//for (int i = 0; i < queue.size(); i++) {
-		//	System.out.println(queue.get(i).getId());
-		//}
+		//test();
 
-		//if (processFinishedDuringInterrupt) {
-		//	processFinishedDuringInterrupt = false;
-		//	return;
-		//}
+		//check if process needs to exit first
 
 		SimProcess firstElement = queue.getFirst();
 		queue.removeFirst();
@@ -75,6 +73,7 @@ public class RR implements Scheduler {
 		System.out.println("Stop running Process {" + "Id=" + firstElement.getId() + ", Current Time=" + time + "}");
 		System.out.println("Start running Process {" + "Id=" + queue.getFirst().getId() + ", Arrival Time=" + queue.getFirst().getTimeOfArrival() + ", Burst Time=" + queue.getFirst().getBurstTime() + ", Current Time=" + time + "}");
 
+		interuptExitTime = time;
 
 	}
 
@@ -104,4 +103,12 @@ public class RR implements Scheduler {
 		return totalWaiting / waitingTimes.size();
 	}
 
+
+	private void test(){
+		System.out.println("----------------------");
+		for (int i = 0; i < queue.size(); i++) {
+			System.out.println(queue.get(i).getId());
+		}
+		System.out.println("----------------------");
+	}
 }

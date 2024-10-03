@@ -12,7 +12,7 @@ public class Main {
 //		s = new FCFS();
 //		s = new SRTF();
 //		s = new SJF();
-		s = new RR(5);
+		s = new RR(10);
         Simulation.run(file, s);
 	}
 	
