@@ -54,20 +54,11 @@ public class SJF implements Scheduler {
 			processChanged = false;
 		}
 
-
-
-		//System.out.println("Start running Process {Id=" + queue.getFirst().getId() + ", Arrival Time=" + queue.getFirst().getTimeOfArrival() + ", Burst Time=" + queue.getFirst().getBurstTime() + ", Current Time=" + time + "}");
-
-
-		//test();
-
-
 		}
 
 	@Override
 	public void onProcessExit(SimProcess p, int time) {
 		queue.remove(p);
-		//System.out.println("Process {" + "Id=" + p.getId() + "} finished at time " + time);
 		int waitingTime = time - p.getTimeOfArrival() - p.getBurstTime();
 		waitingTimes.add(waitingTime);
 		totalWaitingTime += waitingTime;
@@ -113,11 +104,4 @@ public class SJF implements Scheduler {
 		return queue.isEmpty();
 	}
 
-	private void test(){
-		System.out.println("----------------------");
-		for (int i = 0; i < queue.size(); i++) {
-			System.out.println(queue.get(i).getId());
-		}
-		System.out.println("----------------------");
-	}
 }

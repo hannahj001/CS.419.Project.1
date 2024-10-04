@@ -16,13 +16,11 @@ public class RR implements Scheduler {
 	private List<Integer> waitingTimes;
 	private int timeQuantum = 0;
 	private int totalWaitingTime = 0;
-	private int interuptExitTime = 0;
 	private int lastExit = 0;
 	private SimProcess firstElement = null;
 
 
 	public RR(int i) {
-		System.out.println(i);
 		timeQuantum = i;
 		queue = new ArrayList<SimProcess>();
 		waitingTimes = new ArrayList<Integer>();
@@ -45,20 +43,24 @@ public class RR implements Scheduler {
 
 	@Override
 	public void onProcessExit(SimProcess p, int time) {
-		queue.remove(p);
-		int waitingTime = time - p.getTimeOfArrival() - p.getBurstTime();
-		waitingTimes.add(waitingTime);
-		totalWaitingTime += waitingTime;
+		if (!(queue.isEmpty())){
+			queue.remove(p);
+			int waitingTime = time - p.getTimeOfArrival() - p.getBurstTime();
+			waitingTimes.add(waitingTime);
+			totalWaitingTime += waitingTime;
 
-		System.out.println(p.getId() + " finished at time " + time + ". Its waiting time is " + waitingTime);
-		System.out.println("Current average waiting time: " + calculateAvgWaiting());
+			System.out.println(p.getId() + " finished at time " + time + ". Its waiting time is " + waitingTime);
+			System.out.println("Current average waiting time: " + calculateAvgWaiting());
 
 
-		if (!(time % timeQuantum == 0)){
-			System.out.println("Start running Process {" + "Id=" + queue.getFirst().getId() + ", Arrival Time=" + queue.getFirst().getTimeOfArrival() + ", Burst Time=" + queue.getFirst().getBurstTime() + ", Current Time=" + time + "}");
+			if (!(queue.isEmpty())){
+				if (!(time % timeQuantum == 0)){
+					System.out.println("Start running Process {" + "Id=" + queue.getFirst().getId() + ", Arrival Time=" + queue.getFirst().getTimeOfArrival() + ", Burst Time=" + queue.getFirst().getBurstTime() + ", Current Time=" + time + "}");
+				}
+			}
+
+			lastExit = time;
 		}
-
-		lastExit = time;
 
 	}
 
@@ -74,13 +76,12 @@ public class RR implements Scheduler {
 			}
 			System.out.println("Start running Process {" + "Id=" + queue.getFirst().getId() + ", Arrival Time=" + queue.getFirst().getTimeOfArrival() + ", Burst Time=" + queue.getFirst().getBurstTime() + ", Current Time=" + time + "}");
 		}
-		interuptExitTime = time;
 
 	}
 
 	@Override
 	public String getAlgorithmName() {
-		return "RR";
+		return "RR with quantum = " + timeQuantum;
 	}
 
 	@Override
@@ -104,12 +105,4 @@ public class RR implements Scheduler {
 		return totalWaiting / waitingTimes.size();
 	}
 
-
-	private void test(){
-		System.out.println("----------------------");
-		for (int i = 0; i < queue.size(); i++) {
-			System.out.println(queue.get(i).getId());
-		}
-		System.out.println("----------------------");
-	}
 }
