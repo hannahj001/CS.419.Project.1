@@ -19,22 +19,25 @@ public class SRTF implements Scheduler {
 
 	@Override
 	public void onProcessArrival(SimProcess p, int time) {
-		//System.out.printf("\nTIME--------------------------%s\n",time);
-		//System.out.println("Arrival Process {" + "Id=" + p.getId() + ", Arrival Time=" + p.getTimeOfArrival() + ", Burst Time=" + p.getBurstTime() + ", Current Time=" + time + "}");
 		if(queue.isEmpty()){
 			queue.add(p);
 
-		} else if (p.getBurstTime() < queue.getFirst().getBurstTime()) {
-			//System.out.printf("SWITCH\n");
+		}
+//		if (queue.getFirst().getTimeOfArrival() == p.getTimeOfArrival()){
+//			if (queue.getFirst().getBurstTime() > p.getBurstTime()){
+//				queue.addFirst(p);
+//
+//			}
+//		}
 
+		else if (p.getBurstTime() < queue.getFirst().getBurstTime()) {
 			SimProcess firstElement = queue.getFirst();
-			//System.out.printf("\nFIRST ELEMENT BEFORE: %s\n",queue.getFirst().getId());
 			queue.removeFirst();
 			queue.add(p);
 			firstElement.setBurstTime(firstElement.getBurstTime() - time);
 			queue.add(firstElement);
 			queue.sort(Comparator.comparingInt(SimProcess::getBurstTime));
-			//System.out.printf("\nFIRST ELEMENT AFTER: %s\n",queue.getFirst().getId());
+
 			System.out.println("Stop running Process {" + "Id=" + firstElement.getId() + ", Remaining Burst Time=" + firstElement.getBurstTime() + ", Current Time=" + time + "}");
 
 		}else {
@@ -51,6 +54,7 @@ public class SRTF implements Scheduler {
 		if (!queue.isEmpty()) {
 			queue.remove(p);
 			queue.sort(Comparator.comparingInt(SimProcess::getBurstTime));
+
 			int waitingTime = time - p.getTimeOfArrival() - p.getBurstTime();
 			waitingTimes.add(waitingTime);
 			totalWaitingTime += waitingTime;
