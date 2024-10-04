@@ -21,7 +21,7 @@ public class SRTF implements Scheduler {
 	public void onProcessArrival(SimProcess p, int time) {
 		if(queue.isEmpty()){
 			queue.add(p);
-
+			System.out.println("Start running Process {" + "Id=" + queue.getFirst().getId() + ", Arrival Time=" + queue.getFirst().getTimeOfArrival() + ", Burst Time=" + queue.getFirst().getBurstTime() + ", Current Time=" + time + "}");
 		}
 //		if (queue.getFirst().getTimeOfArrival() == p.getTimeOfArrival()){
 //			if (queue.getFirst().getBurstTime() > p.getBurstTime()){
@@ -35,16 +35,18 @@ public class SRTF implements Scheduler {
 			queue.removeFirst();
 			queue.add(p);
 			firstElement.setBurstTime(firstElement.getBurstTime() - time);
+			firstElement.setTimeOfArrival(time);
 			queue.add(firstElement);
 			queue.sort(Comparator.comparingInt(SimProcess::getBurstTime));
 
 			System.out.println("Stop running Process {" + "Id=" + firstElement.getId() + ", Remaining Burst Time=" + firstElement.getBurstTime() + ", Current Time=" + time + "}");
+			System.out.println("Start running Process {" + "Id=" + queue.getFirst().getId() + ", Arrival Time=" + queue.getFirst().getTimeOfArrival() + ", Burst Time=" + queue.getFirst().getBurstTime() + ", Current Time=" + time + "}");
 
 		}else {
 			queue.add(p);
 		}
 		queue.sort(Comparator.comparingInt(SimProcess::getBurstTime));
-		System.out.println("Start running Process {" + "Id=" + queue.getFirst().getId() + ", Arrival Time=" + queue.getFirst().getTimeOfArrival() + ", Burst Time=" + queue.getFirst().getBurstTime() + ", Current Time=" + time + "}");
+		//System.out.println("Start running Process {" + "Id=" + queue.getFirst().getId() + ", Arrival Time=" + queue.getFirst().getTimeOfArrival() + ", Burst Time=" + queue.getFirst().getBurstTime() + ", Current Time=" + time + "}");
 
 
 	}
@@ -55,15 +57,18 @@ public class SRTF implements Scheduler {
 			queue.remove(p);
 			queue.sort(Comparator.comparingInt(SimProcess::getBurstTime));
 
+
 			int waitingTime = time - p.getTimeOfArrival() - p.getBurstTime();
 			waitingTimes.add(waitingTime);
 			totalWaitingTime += waitingTime;
 
 			System.out.println(p.getId() + " finished at time " + time + ". Its waiting time is " + waitingTime);
 			System.out.println("Current average waiting time: " + calculateAvgWaiting());
-		}else {
-			System.out.println("ALL DONE!");
+		}if (!queue.isEmpty()) {
+			queue.sort(Comparator.comparingInt(SimProcess::getBurstTime));
+			System.out.println("Start running Process {" + "Id=" + queue.getFirst().getId() + ", Arrival Time=" + queue.getFirst().getTimeOfArrival() + ", Burst Time=" + queue.getFirst().getBurstTime() + ", Current Time=" + time + "}");
 		}
+
 	}
 
 	@Override
