@@ -35,6 +35,7 @@ public class SRTF implements Scheduler {
 			queue.removeFirst();
 			queue.add(p);
 			firstElement.setBurstTime(firstElement.getBurstTime() - time);
+			firstElement.setTimeOfArrival(time);
 			queue.add(firstElement);
 			queue.sort(Comparator.comparingInt(SimProcess::getBurstTime));
 
@@ -55,6 +56,7 @@ public class SRTF implements Scheduler {
 		if (!queue.isEmpty()) {
 			queue.remove(p);
 			queue.sort(Comparator.comparingInt(SimProcess::getBurstTime));
+
 
 			int waitingTime = time - p.getTimeOfArrival() - p.getBurstTime();
 			waitingTimes.add(waitingTime);
