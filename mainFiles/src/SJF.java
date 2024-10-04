@@ -13,7 +13,7 @@ public class SJF implements Scheduler {
 	private SimProcess currentProcess;
 	private List<Integer> waitingTimes;
 	private int totalWaitingTime = 0;
- 	private int multiArrival = -1;
+ 	private boolean processChanged = false;
 
 
 	public SJF() {
@@ -25,28 +25,41 @@ public class SJF implements Scheduler {
 	public void onProcessArrival(SimProcess p, int time) {
 		if (queue.isEmpty()){
 			queue.add(p);
-			System.out.println("Start running Process {Id=" + queue.getFirst().getId() + ", Arrival Time=" + queue.getFirst().getTimeOfArrival() + ", Burst Time=" + queue.getFirst().getBurstTime() + ", Current Time=" + time + "}");
+			processChanged = true;
+			//test();
 			return;
 		}
 
 		if (queue.getFirst().getTimeOfArrival() == p.getTimeOfArrival()){
 			if (queue.getFirst().getBurstTime() > p.getBurstTime()){
-				System.out.println("Start running Process {Id=" + queue.getFirst().getId() + ", Arrival Time=" + queue.getFirst().getTimeOfArrival() + ", Burst Time=" + queue.getFirst().getBurstTime() + ", Current Time=" + time + "}");
-				queue.add(0,p);
-				//queue.addFirst(p);
+				queue.addFirst(p);
+				processChanged = true;
+				return;
 			}
 			if (queue.getFirst().getBurstTime() <= p.getBurstTime()){
-				//System.out.println("Start running Process {Id=" + queue.getFirst().getId() + ", Arrival Time=" + queue.getFirst().getTimeOfArrival() + ", Burst Time=" + queue.getFirst().getBurstTime() + ", Current Time=" + time + "}");
 				queue.add(p);
+				return;
 			}
+			if (queue.getFirst().getBurstTime() == p.getBurstTime()){
+				queue.add(p);
+				return;
+			}
+
 		} else {
 			queue.add(p);
 		}
 
+		if (processChanged) {
+			System.out.println("Start running Process {Id=" + queue.getFirst().getId() + ", Arrival Time=" + queue.getFirst().getTimeOfArrival() + ", Burst Time=" + queue.getFirst().getBurstTime() + ", Current Time=" + time + "}");
+			processChanged = false;
+		}
+
+
+
 		//System.out.println("Start running Process {Id=" + queue.getFirst().getId() + ", Arrival Time=" + queue.getFirst().getTimeOfArrival() + ", Burst Time=" + queue.getFirst().getBurstTime() + ", Current Time=" + time + "}");
 
 
-		test();
+		//test();
 
 
 		}
