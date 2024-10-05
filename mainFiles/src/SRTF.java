@@ -21,14 +21,17 @@ public class SRTF implements Scheduler {
 	public void onProcessArrival(SimProcess p, int time) {
 		if(queue.isEmpty()){
 			queue.add(p);
-			System.out.println("Start running Process {" + "Id=" + queue.getFirst().getId() + ", Arrival Time=" + queue.getFirst().getTimeOfArrival() + ", Burst Time=" + queue.getFirst().getBurstTime() + ", Current Time=" + time + "}");
+			return;
+			}
+
+		if (queue.getFirst().getTimeOfArrival() == p.getTimeOfArrival()){
+			if (queue.getFirst().getBurstTime() > p.getBurstTime()){
+				queue.addFirst(p);
+				System.out.println("Start running Process {" + "Id=" + queue.getFirst().getId() + ", Arrival Time=" + queue.getFirst().getTimeOfArrival() + ", Burst Time=" + queue.getFirst().getBurstTime() + ", Current Time=" + time + "}");
+			}else{
+				queue.add(p);
+			}
 		}
-//		if (queue.getFirst().getTimeOfArrival() == p.getTimeOfArrival()){
-//			if (queue.getFirst().getBurstTime() > p.getBurstTime()){
-//				queue.addFirst(p);
-//
-//			}
-//		}
 
 		else if (p.getBurstTime() < queue.getFirst().getBurstTime()) {
 			SimProcess firstElement = queue.getFirst();
